@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201104044324_ExtendUserClass")]
-    partial class ExtendUserClass
+    [Migration("20201104062240_MajorChange")]
+    partial class MajorChange
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,9 +31,9 @@ namespace DatingApp.API.Migrations
 
                     b.Property<bool>("IsPublic");
 
-                    b.Property<int>("Url");
+                    b.Property<string>("Url");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -57,11 +57,15 @@ namespace DatingApp.API.Migrations
 
                     b.Property<string>("Gender");
 
+                    b.Property<string>("Interests");
+
                     b.Property<string>("Introduction");
 
                     b.Property<string>("KnownAs");
 
                     b.Property<DateTime>("LastActive");
+
+                    b.Property<string>("LookingFor");
 
                     b.Property<byte[]>("PasswordHash");
 
@@ -88,9 +92,10 @@ namespace DatingApp.API.Migrations
 
             modelBuilder.Entity("DatingApp.API.Models.Photo", b =>
                 {
-                    b.HasOne("DatingApp.API.Models.User")
+                    b.HasOne("DatingApp.API.Models.User", "User")
                         .WithMany("Photos")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
