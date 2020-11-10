@@ -22,14 +22,6 @@
           Base drop zone
       </div>
 
-      <div ng2FileDrop
-           [ngClass]="{'another-file-over-class': hasAnotherDropZoneOver}"
-           (fileOver)="fileOverAnother($event)"
-           [uploader]="uploader"
-           class="well my-drop-zone">
-          Another drop zone
-      </div>
-
       Multiple
       <input type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
 
@@ -103,21 +95,6 @@
                   (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
               <span class="glyphicon glyphicon-trash"></span> Remove all
           </button>
-      </div>
-
-  </div>
-
-</div>
-
-<br><br>
-
-<div class="row">
-  <div class="col-md-12">
-      <div class="panel panel-default">
-          <div class="panel-heading">Response</div>
-          <div class="panel-body">
-            {{ response }}
-          </div>
       </div>
   </div>
 </div>
