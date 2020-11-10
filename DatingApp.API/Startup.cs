@@ -37,6 +37,8 @@ namespace DatingApp.API
                     opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
             
+            //Adding Configuration for Cloudinary
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             //Adding Auto Mapper to Map the Models to DTOs
             services.AddAutoMapper();
             //Adding Seeds

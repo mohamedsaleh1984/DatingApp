@@ -28,9 +28,14 @@ namespace DatingApp.API.Helpers
                     opt.ResolveUsing(d => d.DateOfBirth.CaulcateAge());
                 });
 
-            CreateMap<Photo,PhotosForDetailedDto>();
+            CreateMap<Photo,PhotoForDetailedDto>();
 
             CreateMap<UserForUpdateDto,User>();
+
+            CreateMap<Photo, PhotoForReturnDto>();
+            
+            CreateMap<PhotoForCreationDto, Photo>();
+            
         }        
 
     }
