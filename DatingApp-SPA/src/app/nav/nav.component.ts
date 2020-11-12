@@ -11,29 +11,30 @@ import { AuthService } from '../_services/auth.service';
 
 export class NavComponent implements OnInit {
   model: any = {};
+  photoUrl: string;
 
   constructor(public authService: AuthService,
-             private alertifyService: AlertifyService,
-             private routerService: Router) { }
+    private alertifyService: AlertifyService,
+    private routerService: Router) { }
 
   ngOnInit() {
+    this.authService.currentPhotoUrl.subscribe( photoUrl => this.photoUrl = photoUrl);
   }
 
   login() {
     this.authService.login(this.model).subscribe(
       next => {
         this.alertifyService.success('Logged in successfully');
-       //   console.log('Logged in successfully');
-       
+        //   console.log('Logged in successfully');
       }, error => {
-          this.alertifyService.error(error);
-       // console.log(error);
+        this.alertifyService.error(error);
+        // console.log(error);
       },
       () => {
         // redirect user to members page
         this.routerService.navigate(['/members']);
       }
-      );
+    );
   }
 
   loggedIn() {
@@ -41,11 +42,15 @@ export class NavComponent implements OnInit {
   }
 
   logout() {
-      localStorage.removeItem('token');
-      // console.log('logged out');
-      this.alertifyService.message('logged out.');
-      // redirect user to home page.
-      this.routerService.navigate(['/home']);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    this.authService.decodedToken = null;
+    this.authService.currentUser = null;
+    // console.log('logged out');
+    this.alertifyService.message('logged out.');
+    // redirect user to home page.
+    this.routerService.navigate(['/home']);
   }
 
 }

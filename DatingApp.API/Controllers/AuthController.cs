@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System;
+using AutoMapper;
 
 namespace DatingApp.API.Controllers
 {
@@ -18,12 +19,15 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository repo, IConfiguration config,IMapper mapper)
         {
             _config = config;
             _repo = repo;
+            _mapper = mapper;
         }
-        
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -45,40 +49,43 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-           
-            //    throw new Exception("Computer says no!");
-           
-                var userFromRepo = await _repo.Login(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
-                if(userFromRepo == null)
-                    return Unauthorized();
+            var userFromRepo = await _repo.Login(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
+            
+            if (userFromRepo == null)
+                return Unauthorized();
 
-                if (userForLoginDto == null)
-                    return Unauthorized();
+            if (userForLoginDto == null)
+                return Unauthorized();
 
-                //Create Tolken (UserName, Password)
-                var claims = new[]{
+            //Create Tolken (UserName, Password)
+            var claims = new[]{
                     new Claim(ClaimTypes.NameIdentifier,userFromRepo.Id.ToString()),
                     new Claim(ClaimTypes.Name,userFromRepo.Username)
                 };
-                var key = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-                var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
-                
-                var tokenDescriptor = new SecurityTokenDescriptor{
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.Now.AddDays(1),
-                    SigningCredentials = creds
-                };
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-                var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
 
-                var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-                return Ok(new {
-                    token = tokenHandler.WriteToken(token)
-                });
-               
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user
+            });
+
         }
     }
 }

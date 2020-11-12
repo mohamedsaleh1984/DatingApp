@@ -11,9 +11,11 @@ import { UserService } from 'src/app/_services/user.service';
   templateUrl: './member-edit.component.html',
   styleUrls: ['./member-edit.component.css']
 })
+
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -32,18 +34,23 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe( data => {
         this.user = data['user'];
     });
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
   updateUser() {
     this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(
-      next => {     
+      next => {
       this.alerify.success('Profile updated successfully');
           // reset the form status and reload the user info again.
       this.editForm.reset(this.user);
       }, error => {
-        this.alerify.error('Failed to updated user info'+ error);
+        this.alerify.error('Failed to updated user info' + error);
       }
     );
   }
 
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
+    
+  }
 }

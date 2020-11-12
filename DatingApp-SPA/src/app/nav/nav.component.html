@@ -17,17 +17,29 @@
     </ul>
 
     <div *ngIf="loggedIn()" class="dropdown mr-4" dropdown>
+      <!--Adding profile picture.-->
+      <span class="mr-1">
+<!--
+        <img src="{{authService.currentUser.photoUrl}}" alt=""/>
+-->
+        <img src="{{photoUrl}}" alt=""/>
+
+      </span>
+        <!--Adding welcome message + user's name-->
       <a class="dropdown-toggle text-light" dropdownToggle>
         Welcome {{ authService.decodedToken.unique_name | titlecase }}
       </a>
-
+      <!--Adding drowdown for edit profile and logout menu items-->
       <div class="dropdown-menu" *dropdownMenu>
+        <!--Adding routing to link the anchors with Angular component-->
         <a class="dropdown-item" [routerLink]="['/member/edit']"> <i class="fa fa-user"></i>Edit Profile</a>
         <a class="dropdown-divider"></a>
+        <!--Adding Click event to logout-->
         <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
       </div>
     </div>
 
+    <!--Show this If user isnt logged in-->
     <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
       <input class="form-control mr-sm-2" type="text" placeholder="UserName" name="username" required
         [(ngModel)]="model.username" #username="ngModel">
