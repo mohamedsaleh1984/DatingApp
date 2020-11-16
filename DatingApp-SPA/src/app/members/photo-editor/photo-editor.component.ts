@@ -52,6 +52,10 @@ export class PhotoEditorComponent implements OnInit {
 
     // To refresh the page after uploading the photos, adding a handler to do that.
     this.uploader.onSuccessItem = (item, response, status, headers) => {
+      console.log(response);
+
+      
+
       if (response) {
         const res: Photo = JSON.parse(response);
         const photo = {
@@ -62,7 +66,22 @@ export class PhotoEditorComponent implements OnInit {
           isMain : res.isMain,
           isPublic : res.isPublic
         };
+        //if user doesn't have any photo, set the first photo in the list to be main by default.
+        if (this.photos.length === 0) {
+          photo.isMain = true;
+          this.authService.changeMemeberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
+
         this.photos.push(photo);
+        /*
+        if (photo.isMain) {
+          this.authService.changeMemeberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
+        */
       }
     };
   }
