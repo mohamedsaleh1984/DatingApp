@@ -13,8 +13,9 @@ export class MemeberDetailResolver implements Resolve<User> {
     constructor(private userService: UserService,
                 private router: Router,
                 private alerfiService: AlertifyService) {}
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User>{
-        
+
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> {
         return this.userService.getUser(route.params['id']).pipe(
                 catchError(error => {
                     this.alerfiService.error('Problem retriving data.');
@@ -23,5 +24,4 @@ export class MemeberDetailResolver implements Resolve<User> {
                 })
             );
     }
-                
 }
