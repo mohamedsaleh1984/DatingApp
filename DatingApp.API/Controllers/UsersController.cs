@@ -84,7 +84,8 @@ namespace DatingApp.API.Controllers
 
         [HttpPost("{id}/like/{recipientId}")]
         public async Task<IActionResult> LikeUser(int id, int recipientId){
-             if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var loggedInUserIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+             if(id != int.Parse(loggedInUserIdFromToken))
                 return Unauthorized();
             
             var like = await _repo.GetLike(id,recipientId);
@@ -96,7 +97,8 @@ namespace DatingApp.API.Controllers
             
             like = new Like {
                 LikerId = id,
-                LikeeId = recipientId
+                LikeeId = recipientId,
+                When = DateTime.Now
             };
 
             _repo.Add<Like>(like);
