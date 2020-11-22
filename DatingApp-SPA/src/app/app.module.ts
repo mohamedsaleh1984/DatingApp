@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDatepickerModule, BsDropdownModule, TabsModule } from 'ngx-bootstrap';
+import { BsDatepickerModule, BsDropdownModule, ButtonsModule, TabsModule } from 'ngx-bootstrap';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {TimeAgoPipe} from 'time-ago-pipe';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -30,6 +32,7 @@ import { MemeberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ListsResolver } from './_resolvers/lists.resolver';
 
 
 export function tokenGetter() {
@@ -47,7 +50,8 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TimeAgoPipe,
    ],
   imports: [
     BrowserModule,
@@ -61,6 +65,8 @@ export function tokenGetter() {
     NgxGalleryModule,
     FileUploadModule,
     ReactiveFormsModule,
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
     JwtModule.forRoot({
       config: {
           tokenGetter: tokenGetter,
@@ -79,6 +85,7 @@ export function tokenGetter() {
     MemeberDetailResolver,
     MemeberListResolver,
     MemeberEditResolver,
+    ListsResolver,
     PreventUnsavedChanges
   ],
   bootstrap: [AppComponent]

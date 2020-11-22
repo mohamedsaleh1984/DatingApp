@@ -62,6 +62,9 @@ namespace DatingApp.API
                             ValidateAudience= false
                 };
             });
+
+            //Adding Action Filter - Create new instance per request.
+            services.AddScoped<LogUserActivity>();
             
         }
 
