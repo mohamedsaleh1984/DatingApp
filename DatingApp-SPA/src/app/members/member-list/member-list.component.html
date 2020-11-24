@@ -20,7 +20,7 @@
     <div class="form-group px-2">
       <label for="gender">Show: </label>
       <select class="form-control ml-1" style="width: 130px" id="gender" [(ngModel)]="userParams.gender" name="gender">
-        <option *ngFor="let gender of genderList" [value]="gender.value">{{gender.value}}
+        <option *ngFor="let gender of genderList" [value]="gender.value">{{gender.display}}
         </option>
       </select>
     </div>
