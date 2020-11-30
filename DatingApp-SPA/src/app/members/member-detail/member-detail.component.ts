@@ -78,4 +78,15 @@ export class MemberDetailComponent implements OnInit {
         this.alertifyService.error(error);
       });
   }
+
+  unlikeUser(id: number) {
+    this.userService
+      .unLikeUser(this.authService.decodedToken.nameid, id)
+      .subscribe(data => {
+        this.alertifyService.success('You have Unliked: ' + this.user.knownAs);
+      }, error => {
+        console.log(error);
+        this.alertifyService.error(error);
+      });
+  }
 }

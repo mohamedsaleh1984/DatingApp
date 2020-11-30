@@ -31,4 +31,15 @@ export class MemberCardComponent implements OnInit {
       });
   }
 
+  unlikeUser(id: number) {
+    this.userService
+      .unLikeUser(this.authService.decodedToken.nameid, id)
+      .subscribe(data => {
+        this.alertService.success('You have Unliked: ' + this.user.knownAs);
+      }, error => {
+        console.log(error);
+        this.alertService.error(error);
+      });
+  }
+
 }
