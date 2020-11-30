@@ -123,4 +123,13 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
     .subscribe();
   }
+
+  unLikeUser(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + id + '/unlike/' + recipientId, {});
+  }
+
+  /// [HttpGet("{id}/likes/{recipientId}")]
+  isLiked(id: number, recipientId: number) {
+    return this.http.get(this.baseUrl + 'users/' + id + '/likes/' + recipientId);
+  }
 }

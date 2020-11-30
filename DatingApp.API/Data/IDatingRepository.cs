@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DatingApp.API.Models;
 using DatingApp.API.Helpers;
+using System;
 
 namespace DatingApp.API.Data
 {
@@ -21,5 +22,7 @@ namespace DatingApp.API.Data
         Task<Message> GetMessage(int id);
         Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
         Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);
+
+        Task<Boolean> IsLiked(int myId,int recipientId);
     }
 }

@@ -9,7 +9,15 @@
       </li>
       <!-- Like a user-->
       <li class="list-inline-item">
-        <button class="btn btn-primary" (click)="sendLike(user.id)"><i class="fa fa-heart"></i> </button>
+        <!-- Already Liked user => Unlike-->
+        <div *ngIf="isLiked == 'true'">
+          <button class="btn btn-primary" (click)="unlikeUser(user.id)"><i class="fa fa-heartbeat" aria-hidden="true"></i></button>
+        </div>
+        <!-- Will like User-->
+        <div *ngIf="isLiked == 'false'">
+          <button class="btn btn-primary" (click)="sendLike(user.id)"><i class="fa fa-heart"></i> </button>
+        </div>
+        
       </li>
       <!-- Redirect user to messages tab for the user.-->
       <li class="list-inline-item">

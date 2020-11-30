@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabsetComponent } from 'ngx-bootstrap';
-import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions, NgxGalleryThumbnailsComponent } from 'ngx-gallery';
-import { error } from 'protractor';
+import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery';
 import { User } from 'src/app/_models/user';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
 
 @Component({
@@ -18,12 +18,17 @@ export class MemberDetailComponent implements OnInit {
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  currentUserId: any;
+  isLiked: string = 'false';
 
   constructor(private userService: UserService,
     private alertifyService: AlertifyService,
+    private authService: AuthService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.currentUserId = this.authService.decodedToken.nameid;
+    
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
@@ -44,6 +49,13 @@ export class MemberDetailComponent implements OnInit {
       }
     ];
     this.galleryImages = this.getImages();
+
+    this.userService.isLiked( this.currentUserId, this.user.id).subscribe( data => {
+      this.isLiked = String(data);
+    }, error => {
+        this.alertifyService.error('Unexpected error - get likes');
+    });
+
   }
 
 
@@ -63,5 +75,30 @@ export class MemberDetailComponent implements OnInit {
 
   selectTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
+  }
+
+  sendLike(id: number) {
+    this.isLiked = 'true';
+    this.userService
+      .sendLike(  this.currentUserId, id)
+      .subscribe(data => {
+        this.alertifyService.success('You have Liked: ' + this.user.knownAs);
+      }, error => {
+        console.log(error);
+        this.alertifyService.error(error);
+      });
+  }
+
+  unlikeUser(id: number) {
+    this.isLiked = 'false';
+
+    this.userService
+      .unLikeUser(  this.currentUserId, id)
+      .subscribe(data => {
+        this.alertifyService.success('You have Unliked: ' + this.user.knownAs);
+      }, error => {
+        console.log(error);
+        this.alertifyService.error(error);
+      });
   }
 }
