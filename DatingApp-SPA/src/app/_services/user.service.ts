@@ -123,4 +123,8 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
     .subscribe();
   }
+
+  unLikeUser(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + id + '/unlike/' + recipientId, {});
+  }
 }
