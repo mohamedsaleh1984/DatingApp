@@ -177,5 +177,11 @@ namespace DatingApp.API.Data
 
             return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
+
+        public async Task<bool> IsLiked(int myId, int recipientId)
+        {
+            var enumIntList = await GetUserLikes(myId,true);
+            return enumIntList.Contains(recipientId);
+        }
     }
 }
