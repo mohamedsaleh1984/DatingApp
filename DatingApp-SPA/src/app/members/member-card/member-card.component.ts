@@ -12,17 +12,34 @@ import { UserService } from 'src/app/_services/user.service';
 
 export class MemberCardComponent implements OnInit {
   @Input() user: User;
+  isLiked: boolean;
+  currentUserId: number;
 
   constructor(private authService: AuthService,
     private alertService: AlertifyService,
     private userService: UserService) { }
 
   ngOnInit() {
+    this.isLiked = false;
+    this.currentUserId = this.authService.decodedToken.nameid;
+
+    this.userService.isLiked( this.currentUserId, this.user.id).subscribe( (data) => {
+      this.alertService.message(String(data));
+      /*
+      if (String(data) == 'true') {
+        this.isLiked = true;
+      }
+      */
+    }, error => {
+        this.alertService.error('Unexpected error - get likes');
+    });
+    
+ //   this.alertService.success(String(this.isLiked));
   }
 
   sendLike(id: number) {
     this.userService
-      .sendLike(this.authService.decodedToken.nameid, id)
+      .sendLike(  this.currentUserId, id)
       .subscribe(data => {
         this.alertService.success('You have Liked: ' + this.user.knownAs);
       }, error => {
@@ -33,7 +50,7 @@ export class MemberCardComponent implements OnInit {
 
   unlikeUser(id: number) {
     this.userService
-      .unLikeUser(this.authService.decodedToken.nameid, id)
+      .unLikeUser(  this.currentUserId, id)
       .subscribe(data => {
         this.alertService.success('You have Unliked: ' + this.user.knownAs);
       }, error => {
