@@ -108,6 +108,22 @@ namespace DatingApp.API.Controllers
             
             return BadRequest("Failed to like user");
         }
+
+        [HttpPost("{id}/unlike/{recipientId}")]
+        public async Task<IActionResult> UnlikeUser(int id, int recipientId){
+            var loggedInUserIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+             if(id != int.Parse(loggedInUserIdFromToken))
+                return Unauthorized();
+            
+            var likeFromRepo = await _repo.GetLike(id,recipientId);
+            
+            _repo.Delete<Like>(likeFromRepo);
+
+            if(await _repo.SaveAll())
+                return Ok();
+            
+            return BadRequest("Failed to unlike user");
+        }
         
     }
 }
