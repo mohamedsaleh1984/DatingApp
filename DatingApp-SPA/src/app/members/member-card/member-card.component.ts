@@ -14,21 +14,21 @@ export class MemberCardComponent implements OnInit {
   @Input() user: User;
 
   constructor(private authService: AuthService,
-              private alertService: AlertifyService,
-              private userService: UserService) { }
+    private alertService: AlertifyService,
+    private userService: UserService) { }
 
   ngOnInit() {
   }
 
   sendLike(id: number) {
     this.userService
-        .sendLike(this.authService.decodedToken.nameid,id)
-        .subscribe(data => {
-            this.alertService.success('You have Liked: ' + this. user.knownAs);
-        }, error => {
-            console.log(error);
-            this.alertService.error(error);
-        });
+      .sendLike(this.authService.decodedToken.nameid, id)
+      .subscribe(data => {
+        this.alertService.success('You have Liked: ' + this.user.knownAs);
+      }, error => {
+        console.log(error);
+        this.alertService.error(error);
+      });
   }
 
 }
