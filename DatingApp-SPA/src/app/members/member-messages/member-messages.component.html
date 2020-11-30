@@ -14,7 +14,7 @@
             <div class="header">
               <strong class="primary-font">{{message.senderKnownAs}}</strong>
               <small class="text-muted float-right">
-                <span class="fa fa-clock-o ml-5">{{message.messageSent|timeAgo}}</span>
+                <span class="fa fa-clock-o margin-left-5px">{{message.messageSent|timeAgo}}</span>
               </small>
             </div>
             <p>{{message.content}}</p>
@@ -30,11 +30,11 @@
             <div class="header">
               <small class="text-muted">
                 <span class="fa fa-clock-o"></span>
-                <span class="ml-5">{{message.messageSent|timeAgo}}</span>
-                <span *ngIf="!message.isRead" class="text-danger ml-5">(unread)</span>
-                <span *ngIf="message.isRead" class="text-success ml-5">(Read {{message.dateRead|timeAgo}})</span>
+                <span class="margin-left-5px">{{message.messageSent|timeAgo}}</span>
+                <span *ngIf="!message.isRead" class="text-danger margin-left-5px">(unread)</span>
+                <span *ngIf="message.isRead" class="text-success margin-left-5px">(Read {{message.dateRead|timeAgo}})</span>
               </small>
-              <strong class="primary-font float-right mr-5">{{message.senderKnownAs}}</strong>
+              <strong class="primary-font float-right margin-left-5px">{{message.senderKnownAs}}</strong>
             </div>
             <p>{{message.content}}</p>
           </div>
