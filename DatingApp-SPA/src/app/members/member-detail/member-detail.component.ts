@@ -19,6 +19,7 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   currentUserId: any;
+  isLiked: string = 'false';
 
   constructor(private userService: UserService,
     private alertifyService: AlertifyService,
@@ -27,6 +28,7 @@ export class MemberDetailComponent implements OnInit {
 
   ngOnInit() {
     this.currentUserId = this.authService.decodedToken.nameid;
+    
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
@@ -47,6 +49,13 @@ export class MemberDetailComponent implements OnInit {
       }
     ];
     this.galleryImages = this.getImages();
+
+    this.userService.isLiked( this.currentUserId, this.user.id).subscribe( data => {
+      this.isLiked = String(data);
+    }, error => {
+        this.alertifyService.error('Unexpected error - get likes');
+    });
+
   }
 
 
@@ -69,8 +78,9 @@ export class MemberDetailComponent implements OnInit {
   }
 
   sendLike(id: number) {
+    this.isLiked = 'true';
     this.userService
-      .sendLike(this.currentUserId, id)
+      .sendLike(  this.currentUserId, id)
       .subscribe(data => {
         this.alertifyService.success('You have Liked: ' + this.user.knownAs);
       }, error => {
@@ -80,8 +90,10 @@ export class MemberDetailComponent implements OnInit {
   }
 
   unlikeUser(id: number) {
+    this.isLiked = 'false';
+
     this.userService
-      .unLikeUser(this.authService.decodedToken.nameid, id)
+      .unLikeUser(  this.currentUserId, id)
       .subscribe(data => {
         this.alertifyService.success('You have Unliked: ' + this.user.knownAs);
       }, error => {
