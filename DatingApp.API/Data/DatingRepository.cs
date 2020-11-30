@@ -28,21 +28,20 @@ namespace DatingApp.API.Data
             var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
             return photo;
         }
+
         public async Task<User> GetUser(int userId)
         {
             var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == userId);
             return user;
         }
         /*
+        Get all users without pagination.
         public async Task<IEnumerable<User>> GetUsers()
         {
             var users = await _context.Users.Include( p=> p.Photos).ToListAsync();
             return users;
         }
         */
-
-
-
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
@@ -59,23 +58,27 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
+            // Get all users including thier photos OrderedBy Last Loggin.
             var users = _context.Users.Include(p => p.Photos)
                 .OrderByDescending(u => u.LastActive)
                 .AsQueryable();
-            //remove current user from the result set.
+
+            // Filter current user from the result set.
             users = users.Where(u => u.Id != userParams.UserId);
-            //bring only the selected gender.
+            
+            // Filter only the selected gender.
             users = users.Where(u => u.Gender == userParams.Gender);
+
 
             if (userParams.Likers)
             {
-                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+                var userLikers = await GetUserLikes(userParams.UserId, true);
                 users = users.Where(u => userLikers.Contains(u.Id));
             }
 
             if (userParams.Likees)
             {
-                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
+                var userLikees = await GetUserLikes(userParams.UserId, false);
                 users = users.Where(u => userLikees.Contains(u.Id));
             }
 
@@ -122,11 +125,17 @@ namespace DatingApp.API.Data
                                             .FirstOrDefaultAsync(u => u.Id == id);
             if (likers)
             {
-                return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);
+                return user
+                        .Likers
+                        .Where(u => u.LikeeId == id)
+                        .Select(i => i.LikerId);
             }
             else
             {
-                return user.Likers.Where(u => u.LikerId == id).Select(i => i.LikeeId);
+                return user
+                        .Likees
+                        .Where(u => u.LikerId == id)
+                        .Select(i => i.LikeeId);
             }
         }
 
